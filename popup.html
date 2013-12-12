@@ -1,0 +1,99 @@
+<html>
+<head>
+<script type="text/javascript">
+function encodeKeys(keys) {
+  for (var i = 0; i < 11; i++) {
+    keys[i] = escape(keys[i]);
+  }
+  return keys.join(",");
+}
+
+function decodeKeys(str) {
+  var keys = str.split(",");
+  for (var i = 0; i < 11; i++) {
+    keys[i] = keys[i] ? unescape(keys[i]) : "";
+  }
+  return keys;
+}
+
+function save() {
+  var keys = [];
+  for (var i = 0; i < 11; i++) {
+    var input = document.getElementById("k" + i);
+    var span = document.getElementById("c" + i);
+    keys.push([input.value, span.innerHTML].join(" "));
+  }
+  //console.log(keys);
+  keys = encodeKeys(keys);
+  if (localStorage) {
+    localStorage["keys"] = keys;
+  } else {
+    document.cookie = keys + "; expires=Tue, 19-Jan-2038 03:14:07 GMT; path=/;";
+  }
+}
+
+function keyd(input, event, id) {
+  var c = event.keyCode;
+  // escape or backspace or delete
+  if (c == 27 || c == 8 || c == 46) {
+    var span = document.getElementById("c" + id);
+    input.value = "";
+    span.innerHTML = "";
+    return;
+  }
+}
+
+function key(input, event, id) {
+  var c = event.keyCode;
+  if (c < 0x21 || c > 0x7e) return;
+  var ck = c;
+  if (event.shiftKey) ck |= 128;
+  if (event.ctrlKey) ck |= 256;
+  var span = document.getElementById("c" + id);
+  span.innerHTML = ck;
+  if (event.ctrlKey) {
+    // TODO: Handle shift+number or some properly.
+    if (!event.shiftKey && c >= 65 && c <= 90) c |= 32;
+    input.value = "^" + String.fromCharCode(c);
+  } else {
+    input.value = "";
+  }
+}
+
+function load() {
+  var keys = null;
+  if (localStorage) {
+    keys = localStorage["keys"];
+  }
+  if (!keys) {
+    keys = document.cookie;
+  }
+  keys = decodeKeys(keys);
+  for (var i = 0; i < 11; i++) {
+    if (keys[i]) {
+      var a = keys[i].split(" ");
+      document.getElementById("k" + i).value = a[0];
+      document.getElementById("c" + i).innerHTML = a[1];
+    }
+  }
+}
+</script>
+</head>
+<body onload="load()" style="width:24em">
+<p>Delete or Back Space to reset
+<table>
+<tr><td>All pages<td><input id="k0" value="" size="2" onkeydown="keyd(this,event,0)" onkeypress="key(this,event,0)"><td><span id="c0"></span></tr>
+<tr><td>Japanese pages<td><input id="k1" value="" size="2" onkeydown="keyd(this,event,1)" onkeypress="key(this,event,1)"><td><span id="c1"></span></tr>
+<tr><td>English pages<td><input id="k2" value="" size="2" onkeydown="keyd(this,event,2)" onkeypress="key(this,event,2)"><td><span id="c2"></span></tr>
+<tr><td>Japanese interface<td><input id="k3" value="" size="2" onkeydown="keyd(this,event,3)" onkeypress="key(this,event,3)"><td><span id="c3"></span></tr>
+<tr><td>English interface<td><input id="k4" value="" size="2" onkeydown="keyd(this,event,4)" onkeypress="key(this,event,4)"><td><span id="c4"></span></tr>
+<tr><td>All pages + Japanese interface<td><input id="k5" value="" size="2" onkeydown="keyd(this,event,5)" onkeypress="key(this,event,5)"><td><span id="c5"></span></tr>
+<tr><td>All pages + English interface<td><input id="k6" value="" size="2" onkeydown="keyd(this,event,6)" onkeypress="key(this,event,6)"><td><span id="c6"></span></tr>
+<tr><td>Japanese pages + Japanese interface<td><input id="k7" value="" size="2" onkeydown="keyd(this,event,7)" onkeypress="key(this,event,7)"><td><span id="c7"></span></tr>
+<tr><td>Japanese pages + English interface<td><input id="k8" value="" size="2" onkeydown="keyd(this,event,8)" onkeypress="key(this,event,8)"><td><span id="c8"></span></tr>
+<tr><td>English pages + Japanese interface<td><input id="k9" value="" size="2" onkeydown="keyd(this,event,9)" onkeypress="key(this,event,9)"><td><span id="c9"></span></tr>
+<tr><td>English pages + English interface<td><input id="k10" value="" size="2" onkeydown="keyd(this,event,10)" onkeypress="key(this,event,10)"><td><span id="c10"></span></tr>
+</table>
+<input type="button" value="Save" onclick="save()">
+</body>
+</html>

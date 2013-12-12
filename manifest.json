@@ -1,0 +1,31 @@
+{
+  "name": "En Google modified by Gulfweed",
+  "version": "2.1",
+  "description": "Add a quick language switching feature, etc. on Google",
+  "content_scripts": [
+    {
+      "js": [
+        "engoogle.user.js"
+      ],
+      "matches": [
+        "*://encrypted.google.com/",
+        "*://encrypted.google.com/webhp*",
+        "*://encrypted.google.com/search*",
+        "*://www.google.com/",
+        "*://www.google.com/webhp*",
+        "*://www.google.com/ig*",
+        "*://www.google.com/search*",
+        "*://www.google.co.jp/",
+        "*://www.google.co.jp/webhp*",
+        "*://www.google.co.jp/ig*",
+        "*://www.google.co.jp/search*"
+      ]
+    }
+  ],
+  "background_page": "bg.html",
+  "browser_action": {
+    "default_icon": "engoogle.png",
+    "default_title": "engoogle",
+    "default_popup": "popup.html"
+  }
+}
