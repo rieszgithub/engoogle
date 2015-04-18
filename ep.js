@@ -1,4 +1,3 @@
-<html><head><script>
 function decodeKeys(str) {
   var keys = str.split(",");
   for (var i = 0; i < 11; i++) {
@@ -16,4 +15,3 @@ chrome.extension.onConnect.addListener(function(port) {
   }
   port.postMessage(decodeKeys(keys));
 });
-</script></head></html>
