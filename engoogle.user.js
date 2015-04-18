@@ -2,6 +2,7 @@
 // @name          En Google modified by Gulfweed
 // @description   Add a quick language switching feature, etc. on Google
 // @include       /^https?:\/\/(www|encrypted)\.google\.(com|co\.jp)\/(webhp|ig|search|).*$/
+// @grant          none
 // ==/UserScript==
 
 // Based on En Google by http://gimite.net/
@@ -44,6 +45,17 @@ function nParent(node, i) {
   var parent = node.parentNode;
   if (parent) return nParent(parent, i - 1);
   else return null;
+}
+
+function findSearchForm() {
+  var form = document.getElementById('tsf');
+  if (!form) {
+    logDebug("tsf not found. Looking for gbqf.");
+
+    form = document.getElementById('gbqf');
+  }
+
+  return form;
 }
 
 //
@@ -180,36 +192,30 @@ var add_radios = function() {
     logDebug("po-tg found.");
   }
 
+  var search_form = findSearchForm();
 
-  var gs_elem = getElementUniqueByName('gs');
-  if (!gs_elem) {
-    logDebug("gs not found. Looking for gbqf.");
-
-    gs_elem = document.getElementById('gbqf');
-  }
-
-  if (gs_elem) {
+  if (search_form) {
     var tophf = document.getElementById('tophf');
     if (!tophf) {
-      tophf = gs_elem;
+      tophf = search_form;
     } else {
       logDebug("tophf not found.");
     }
 
-    var gs_hidden_hl = getElementUniqueByName('hl', gs_elem);
-    if (!gs_hidden_hl) {
+    var search_form_hidden_hl = getElementUniqueByName('hl', search_form);
+    if (!search_form_hidden_hl) {
       if (tophf) {
         tophf.innerHTML += '<input type="hidden" name="hl">';
       }
     }
-    var gs_hidden_lr = getElementUniqueByName('lr', gs_elem);
-    if (!gs_hidden_lr) {
+    var search_form_hidden_lr = getElementUniqueByName('lr', search_form);
+    if (!search_form_hidden_lr) {
       if (tophf) {
         tophf.innerHTML += '<input type="hidden" name="lr">';
       }
     }
-    var gs_hidden_tbs = getElementUniqueByName('tbs', gs_elem);
-    if (!gs_hidden_tbs) {
+    var search_form_hidden_tbs = getElementUniqueByName('tbs', search_form);
+    if (!search_form_hidden_tbs) {
       if (tophf) {
         tophf.innerHTML += '<input type="hidden" name="tbs">';
       }
@@ -220,20 +226,20 @@ var add_radios = function() {
       var radio = document.getElementById(hl_radios[i]);
       if (!radio) return;
 
-      var gs_hidden_hl = getElementUniqueByName('hl', gs_elem);
-      if (radio.checked && gs_hidden_hl) {
-        gs_hidden_hl.value = radio.value;
+      var search_form_hidden_hl = getElementUniqueByName('hl', search_form);
+      if (radio.checked && search_form_hidden_hl) {
+        search_form_hidden_hl.value = radio.value;
       }
 
       var handler = function(event) {
-        var gs_hidden_hl = getElementUniqueByName('hl', gs_elem);
-        if (gs_hidden_hl) {
-          gs_hidden_hl.value = event.target.value;
+        var search_form_hidden_hl = getElementUniqueByName('hl', search_form);
+        if (search_form_hidden_hl) {
+          search_form_hidden_hl.value = event.target.value;
         }
 
         var q = getElementUniqueByName('q');
         if (q.value) {
-          gs_elem.submit();
+          search_form.submit();
         }
       };
 
@@ -254,13 +260,13 @@ var add_radios = function() {
           new_lr = 'lang_en';
         }
 
-        var gs_hidden_lr = getElementUniqueByName('lr', gs_elem);
-        var gs_hidden_tbs = getElementUniqueByName('tbs', gs_elem);
-        if (gs_hidden_lr) {
-          gs_hidden_lr.value = new_lr;
+        var search_form_hidden_lr = getElementUniqueByName('lr', search_form);
+        var search_form_hidden_tbs = getElementUniqueByName('tbs', search_form);
+        if (search_form_hidden_lr) {
+          search_form_hidden_lr.value = new_lr;
         }
-        if (gs_hidden_tbs) {
-          gs_hidden_tbs.value = new_tbs;
+        if (search_form_hidden_tbs) {
+          search_form_hidden_tbs.value = new_tbs;
         }
       }
 
@@ -273,18 +279,18 @@ var add_radios = function() {
           new_lr = 'lang_en';
         }
 
-        var gs_hidden_lr = getElementUniqueByName('lr', gs_elem);
-        var gs_hidden_tbs = getElementUniqueByName('tbs', gs_elem);
-        if (gs_hidden_lr) {
-          gs_hidden_lr.value = new_lr;
+        var search_form_hidden_lr = getElementUniqueByName('lr', search_form);
+        var search_form_hidden_tbs = getElementUniqueByName('tbs', search_form);
+        if (search_form_hidden_lr) {
+          search_form_hidden_lr.value = new_lr;
         }
-        if (gs_hidden_tbs) {
-          gs_hidden_tbs.value = new_tbs;
+        if (search_form_hidden_tbs) {
+          search_form_hidden_tbs.value = new_tbs;
         }
 
         var q = getElementUniqueByName('q');
         if (q.value) {
-          gs_elem.submit();
+          search_form.submit();
         }
       };
 
